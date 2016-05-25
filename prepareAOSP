@@ -1,0 +1,4 @@
+#!/bin/sh
+. cdaosp
+. build/envsetup.sh
+lunch aosp_arm-eng

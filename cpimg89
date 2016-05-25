@@ -1,0 +1,4 @@
+#!/bin/sh
+IMG_SRC="out/target/product/inhon89_sh_evdo"
+IMG_DES="/home/teee/winDesktop/$1"
+mkdir $IMG_DES ; cp $IMG_SRC/* $IMG_DES

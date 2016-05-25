@@ -1,0 +1,33 @@
+#!/bin/sh
+
+SRC=~
+DES=~/Dropbox/backup
+
+CopyToCmd(){
+$1 $2 $3
+}
+
+Copy(){
+echo "cp -R $1 $2"
+CopyToCmd "cp -R" $1 $2
+}
+
+FastCopy(){
+echo "fastcp $1 $2"
+CopyToCmd "fastcp" $1 $2
+}
+
+Copy $SRC/.bashrc $DES/.bashrc
+Copy $SRC/.tmux-session $DES/.tmux-session
+FastCopy $SRC/.mozilla $DES/.mozilla
+FastCopy $SRC/.gcin $DES/.gcin
+Copy $SRC/.emacs $DES/.emacs
+FastCopy $SRC/.emacs.d $DES/.emacs.d
+
+mkdir -p $DES/.config
+FastCopy $SRC/.config/google-chrome/ $DES/.config/google-chrome/
+FastCopy $SRC/.config/cairo-dock/ $DES/.config/cairo-dock/
+FastCopy $SRC/.config/tomboy/ $DES/.config/tomboy/
+
+mkdir -p $DES/.byobu/bin
+FastCopy $SRC/.byobu $DES/.byobu

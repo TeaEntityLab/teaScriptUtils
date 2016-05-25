@@ -1,0 +1,15 @@
+#!/bin/sh
+# file: fastcp.sh
+
+source="$1"
+target="$2"
+
+if [ -z $1 ] || [ -z "$2" ] ; then
+    echo "$0 SOURCE_DIR TARGET_DIR"
+    exit 1
+fi
+
+#exec tar -cp "$source" -f - | tar -xpv -C "$target" -f -
+#end
+
+(cd $source && bsdtar cf - .) | pv -trab -B 500M  | (cd $target && bsdtar xpSf - )

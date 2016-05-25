@@ -1,0 +1,5 @@
+#!/bin/sh
+DES=/system/priv-app
+adb remount
+adb push $1apk $DES
+adb push $1odex $DES

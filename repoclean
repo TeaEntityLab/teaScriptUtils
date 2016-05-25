@@ -1,0 +1,1 @@
+./repo forall -p -c 'git clean -f -d'
