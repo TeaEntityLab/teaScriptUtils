@@ -1,0 +1,4 @@
+for var;
+do
+	python -c "print(hex($var))"
+done
