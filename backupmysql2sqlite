@@ -1,0 +1,4 @@
+rm target.db
+
+mysqldump --skip-extended-insert --compact $* --all-databases > _tmp.sql
+./mysql2sqlite _tmp.sql | sqlite3 target.db
