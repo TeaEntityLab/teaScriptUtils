@@ -1,0 +1,7 @@
+#!/bin/sh
+wget -qO- https://blockchain.info/ticker \
+| python3 -c '
+import sys, json
+print("฿ $%(last)s" % json.load(sys.stdin)["USD"])
+'
+# eof
