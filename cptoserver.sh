@@ -2,7 +2,7 @@
 
 echo -n "ssh "
 read SSH_OPTIONS
-REMOTE_ROOT=/root/remote
+REMOTE_ROOT="~/remote"
 LOCAL_TRANSFER="tar -C / -cf - $*"
 REMOTE_TRANSFER="tar -C $REMOTE_ROOT/ -xvf -"
 ssh $SSH_OPTIONS "mkdir $REMOTE_ROOT"
