@@ -1,0 +1,13 @@
+version: '2'
+services:
+  mongo:
+    container_name: local-mongo-27017
+    image: mongo
+    ports:
+      - "27017:27017"
+
+  redis:
+    container_name: local-redis-6379
+    image: redis:alpine
+    ports:
+      - "6379:6379"
