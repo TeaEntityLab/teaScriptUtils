@@ -1,0 +1,14 @@
+ffmpeg -i $1 -y -r 20 -c:v libx264 -movflags faststart -pass 1 -coder 0 -bf 0 -flags -loop -wpredp 0 -c:a copy -vf "scale=trunc(oh/2)*2:360" $2
+#ffmpeg -i $1 -y -r 20 -c:v libx264 -movflags faststart -pass 1 -coder 0 -bf 0 -flags -loop -wpredp 0 -c:a copy -vf "scale=-1:360" $2
+
+#ffmpeg -y -i $1 -r 23.4375 -vf "scale=trunc(oh*a/2)*2:360" -c:v libx264 -force_key_frames "expr:gte(t,n_forced*0.5)" -pass 1 -coder 0 -bf 0 -flags -loop -wpredp 0 -hls_list_size 0 -hls_time 1 -c:a libfdk_aac -b:a 128k -ar 48000 $2
+#ffmpeg -y -i $1 -r 23.4375 -vf "scale=-1:360" -c:v libx264 -force_key_frames "expr:gte(t,n_forced*0.5)" -pass 1 -coder 0 -bf 0 -flags -loop -wpredp 0 -hls_list_size 0 -hls_time 1 -c:a libfdk_aac -b:a 128k -ar 48000 $2
+
+
+
+
+
+
+
+
+
