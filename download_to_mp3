@@ -1,0 +1,45 @@
+#!/bin/bash
+
+# 檢查是否提供了至少兩個參數 (集數和至少一個輸入檔)
+if [ "$#" -lt 2 ]; then
+  echo "錯誤: 未提供足夠的參數。"
+  echo "用法: $0 <episode-number> <input-file-1> [input-file-2] ..."
+  echo "範例: $0 101 video1.mp4 video2.mkv"
+  exit 1
+fi
+
+# 第一個參數是集數
+episode_number="$1"
+# 移除第一個參數，剩下的就是檔案列表
+shift
+
+# 初始化輸入檔案的索引
+input_index=1
+
+# 遍歷所有剩餘的參數 (即輸入檔案列表)
+for input in "$@"; do
+#  # 檢查輸入檔案是否存在
+#  if [ ! -f "${input}" ]; then
+#    echo "警告: 找不到檔案 '${input}'，將跳過處理。"
+#    continue # 跳到下一個檔案
+#  fi
+
+  # 設定輸出的檔名
+  output_filename="${episode_number}-${input_index}.mp3"
+
+  echo "----------------------------------------"
+  echo "正在處理檔案 #${input_index}: ${input}"
+  echo "輸出至 -> ${output_filename}"
+  echo "----------------------------------------"
+
+  # 執行 ffmpeg 指令
+  # -i "${input}"    : 指定輸入檔案 (用引號括起來以支援包含空格的檔名)
+  # -vn             : 忽略影片軌，只處理音訊
+  # "${output_filename}" : 指定輸出檔名
+  ffmpeg -i "${input}" -vn "${output_filename}"
+
+  # 索引加一，為下一個檔案做準備
+  ((input_index++))
+done
+
+echo "所有檔案處理完畢。"
