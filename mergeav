@@ -1,0 +1,72 @@
+#!/bin/bash
+# mergeav — 用 ffmpeg 把影像軌和音訊軌合併成單一檔案
+# 只重新封裝（mux），不重新編碼：速度快、零畫質音質損失
+#
+# 用法:
+#   mergeav <video> <audio> [output]
+#
+# 範例:
+#   mergeav ~/Downloads/「影片」_abc123.mp4 ~/Downloads/「影片」_abc123.m4a
+#   mergeav video.mp4 audio.m4a out.mp4
+#
+# 注意: ~ 要放在引號外面才會展開（或改用 $HOME）:
+#   mergeav "$HOME/Downloads/a.mp4" "$HOME/Downloads/a.m4a"   (O)
+#   mergeav "~/Downloads/a.mp4" "~/Downloads/a.m4a"           (X, ~ 不會展開)
+
+set -euo pipefail
+
+if [ "$#" -lt 2 ] || [ "$#" -gt 3 ]; then
+  echo "用法: $0 <video> <audio> [output]"
+  echo "範例: $0 video.mp4 audio.m4a out.mp4"
+  exit 1
+fi
+
+command -v ffmpeg >/dev/null 2>&1 || { echo "錯誤: 找不到 ffmpeg"; exit 1; }
+
+video="$1"
+audio="$2"
+
+for f in "$video" "$audio"; do
+  if [ ! -f "$f" ]; then
+    echo "錯誤: 找不到檔案 '$f'"
+    exit 1
+  fi
+done
+
+if [ -n "${3:-}" ]; then
+  output="$3"
+else
+  # 預設沿用影片的副檔名，不認識的容器就用 mkv（什麼都裝得下）
+  ext="${video##*.}"
+  case "$ext" in
+    mp4|mkv|mov|m4v|webm) ;;
+    *) ext="mkv" ;;
+  esac
+  output="${video%.*}.merged.${ext}"
+fi
+
+# mp4/mov 容器放不進 opus/vorbis 等音軌，自動改出 mkv
+case "$output" in
+  *.mp4|*.mov|*.m4v)
+    case "${audio##*.}" in
+      webm|ogg|opus)
+        echo "提醒: ${audio##*.} 音軌放不進 mp4 容器，輸出改為 mkv"
+        output="${output%.*}.mkv"
+        ;;
+    esac
+    ;;
+esac
+
+echo "影片: $video"
+echo "音軌: $audio"
+echo "輸出: $output"
+
+# -map 0:v:0   只取第一個輸入的影像軌（原本的音軌會被取代）
+# -map 1:a:0   只取第二個輸入的音訊軌
+# -c copy      串流複製，不重新編碼
+# -shortest    以較短的軌為準收尾
+ffmpeg -hide_banner -i "$video" -i "$audio" \
+  -map 0:v:0 -map 1:a:0 -c copy -shortest \
+  "$output"
+
+echo "完成: $output"
